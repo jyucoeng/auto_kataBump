@@ -297,6 +297,7 @@ def main():
     display = setup_xvfb()
 
     ok = fail = skip = 0
+    not_yet = 0
     tg_dests = set()  # (token, chat_id) 去重
 
     try:
@@ -338,7 +339,7 @@ def main():
                     else:
                         msg = f"✅ Katabump 已提交续期（Expiry 可能稍后更新）\n账号：{safe_email}\nExpiry：{before}"
                 elif status == "OK_NOT_YET":
-                    skip += 1
+                    not_yet += 1
                     msg = (
                         "ℹ️ Katabump 续期跳过（站点返回：未到可续期时间；以 UTC 0点 为基准）\n"
                         f"账号：{safe_email}\n"
@@ -363,7 +364,8 @@ def main():
             if i < len(accounts):
                 time.sleep(5)
 
-        summary = f"📌 本次批量完成：成功 {ok} / 跳过 {skip} / 失败 {fail}"
+        summary = f"📌 汇总：续期成功 {ok} / 已点按钮但未开放 {not_yet} / 跳过未点按钮 {skip} / 失败 {fail}"
+
         print("\n" + summary)
         if tg_dests:
             for token, chat in sorted(tg_dests):
